@@ -14,10 +14,14 @@
       "format": "date-time"
     },
     "accounting_treatment":{
-       "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/types.json#/accounting_treatment"
+       "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/accounting_treatment"
     },
     "accrued_interest_balance": {
       "description": "The accrued interest due at the next payment date. Monetary type represented as a naturally positive integer number of cents/pence.",
+      "type": "integer"
+    },
+    "accumulated_changes_fv": {
+      "description": "Accumulated changes in fair value due to credit risk.",
       "type": "integer"
     },
     "administration": {
@@ -48,8 +52,13 @@
       "type": "string",
       "enum": ["ZERO", "UKBRBASE", "FDTR"]
     },
+    "cum_recoveries": {
+      "description": "The total amount recovered since the date of default of the instrument.",
+      "type": "integer",
+      "minimum": 0
+    },
     "currency_code": {
-      "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/types.json#/currency_code"
+      "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/currency_code"
     },
     "customers": {
       "description": "The list of customers for this loan",
@@ -72,10 +81,20 @@
         "required": ["id", "income_amount"]
       }
     },
+    "ccf": {
+      "description": "The credit conversion factor that indicates the proportion of the undrawn amount that would be drawn down on default.",
+      "type": "number",
+      "minimum": 0
+    },
     "encumbrance_amount": {
       "description": "The amount of the loan that is encumbered by potential future commitments or legal liabilities. Monetary type represented as a naturally positive integer number of cents/pence.",
       "type": "integer",
       "minimum": 0
+    },
+    "encumbrance_end_date": {
+      "description": "Date encumbrance amount goes to zero. YYYY-MM-DDTHH:MM:SSZ in accordance with ISO 8601",
+      "type": "string",
+      "format": "date-time"
     },
     "end_date": {
       "description": "YYYY-MM-DDTHH:MM:SSZ in accordance with ISO 8601",
@@ -84,7 +103,7 @@
     },
     "facility_currency_code": {
       "description": "The currency of the credit facility if not the same as loan currency_code.",
-      "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/types.json#/currency_code"
+      "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/currency_code"
     },
     "first_payment_date": {
       "description": "The first payment date for interest payments.",
@@ -109,6 +128,11 @@
       "description": "The loss event resulting in the impairment of the loan.",
       "type": "string",
       "enum": ["collective", "individual", "write_off"]
+    },
+    "interest_repayment_frequency": {
+      "description": "Repayment frequency of the loan interest, if different from principal.",
+      "type": "string",
+      "enum": ["daily", "weekly", "bi_weekly", "monthly", "bi_monthly", "quarterly", "semi_annually", "annually", "at_maturity"]
     },
     "issuer_id": {
       "description": "The unique identifier for the issuer of the loan.",
@@ -180,12 +204,12 @@
       "description": "The underlying reason the borrower has requested the loan.",
       "type": "string",
       "enum": [
-        "house_purchase", "first_time_buyer", "buy_to_let", "buy_to_let_house_purchase", "buy_to_let_remortgage", "buy_to_let_further_advance",
+        "house_purchase", "first_time_buyer", "buy_to_let", "consumer_buy_to_let", "buy_to_let_house_purchase", "buy_to_let_remortgage", "buy_to_let_further_advance",
         "buy_to_let_other", "remortgage", "remortgage_other", "lifetime_mortgage", "bridging_loan", "further_advance", "promotional", "other", "ips"
       ]
     },
     "rate": {
-      "description": "The full interest rate applied to the loan balance. Note that for tracker rates this includes the benchmark (ie. not the credit spread). Percentages represented as a decimal/float such that 1.5% is 0.015.",
+      "description": "The full interest rate applied to the loan balance. Note that for tracker rates this includes the benchmark (ie. not the credit spread). Percentages represented as a decimal/float, so 1.5 implies 1.5%.",
       "type": "number"
     },
     "rate_type": {
@@ -198,9 +222,9 @@
       "type": "boolean"
     },
     "repayment_frequency": {
-      "description": "Repayment frequency of the loan refers to how often the repayments occur.",
+      "description": "Repayment frequency of the loan.",
       "type": "string",
-      "enum": ["daily", "weekly", "bi_weekly", "monthly", "quarterly", "semi_annually", "annually", "at_maturity"]
+      "enum": ["daily", "weekly", "bi_weekly", "monthly", "bi_monthly", "quarterly", "semi_annually", "annually", "at_maturity"]
     },
     "repayment_type": {
       "description": "Repayment type of the loan refers to whether the customer will be repaying capital + interest, just interest or a combination of the two.",
@@ -219,15 +243,23 @@
     },
     "risk_country_code": {
       "description": "Two-letter country code describing where the risk for the security resides. In accordance with ISO 3166-1",
-      "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/types.json#/country_code"
+      "$ref": "https://raw.githubusercontent.com/SuadeLabs/fire/master/v1-dev/common.json#/country_code"
+    },
+    "risk_weight_std": {
+      "description": "The standardised approach risk weight represented as a decimal/float such that 1.5% is 0.015.",
+      "type": "number"
+    },
+    "risk_weight_irb": {
+      "description": "The internal risk weight represented as a decimal/float such that 1.5% is 0.015.",
+      "type": "number"
     },
     "secured": {
       "description": "Is this loan secured or unsecured?",
       "type": "boolean"
     },
-    "securitised": {
-      "description": "Is this loan securitised?",
-      "type": "boolean"
+    "source": {
+      "description": "The source where this data originated.",
+      "type": "string"
     },
     "sources": {
       "description": "Identifiers for data sources. Useful for analytics and MI purposes.",
@@ -259,6 +291,14 @@
         "mortgage", "commercial_property", "commercial", "personal", "auto", "liquidity_facility",
         "trade_finance", "credit_card", "credit_facility", "multiccy_facility", "nostro", "other"
       ]
+    },
+    "version_id": {
+      "description": "The version identifier of the data such as the firm's internal batch identifier.",
+      "type": "string"
+    },
+    "vol_adj": {
+      "description": "The volatility adjustment appropriate to the exposure.",
+      "type": "number"
     },
     "count": {
       "description": "Describes the number of loans aggregated into a single row.",

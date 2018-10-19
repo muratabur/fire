@@ -4,17 +4,19 @@ title:		"Introduction"
 ---
 
 # General Information
-This is an introduction for people new to JSON, if you are already familiar with JSON schemas already, move along now, nothing to see here.
+This is an introduction for people new to JSON and Markdown, if you are already familiar with JSON schemas already, move along now, nothing to see here.
 
 ### Headers
 Please make sure all property markdown files in documentation/properties/ folder start with the following header:
 
-```markdown
+```
+
 --- 
 layout:			property
 title:			"name of the data item as it appears in the schemas (ie. lowercase)"
 schemas:		[a list of schemas where this data_item is used]
 ---
+
 ```
 
 # JSON
@@ -191,9 +193,13 @@ and this would be an invalid input:
 {"animal_type": "horse"}
 ```
 
+# More information
+The JSON spec can be found [here][json] and JSON-schema spec cane be found [here][json-schema].
 
 ---
 [boole]:  https://en.wikipedia.org/wiki/George_Boole
 [iso]:    https://en.wikipedia.org/wiki/International_Organization_for_Standardization
 [ifrs]:   https://en.wikipedia.org/wiki/International_Financial_Reporting_Standards
 [enum]:   https://en.wikipedia.org/wiki/Enumeration
+[json]:   http://json.org
+[json-schema]:  http://json-schema.org/
